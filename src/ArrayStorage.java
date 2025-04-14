@@ -2,22 +2,23 @@
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10];
+    Resume[] storage = new Resume[10000];
+    int size;
 
     void clear() {
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null) {
+        if (size != 0) {
+            for (int i = 0; i < size; i++) {
                 storage[i] = null;
-            } else {
-                break;
             }
         }
+        size = 0;
     }
 
     void save(Resume r) {
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) {
                 storage[i] = r;
+                size++;
                 break;
             }
         }
@@ -33,13 +34,12 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        int sizeArray = size();
-
-        for (int i = 0; i < storage.length; i++) {
-            if (sizeArray != 0) {
+        if (size != 0) {
+            for (int i = 0; i < size; i++) {
                 if (storage[i].toString().equals(uuid)) {
-                    storage[i] = storage[sizeArray - 1];
-                    storage[sizeArray - 1] = null;
+                    storage[i] = storage[size - 1];
+                    storage[size - 1] = null;
+                    size--;
                     break;
                 }
             }
@@ -50,8 +50,7 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        int sizeArray = size();
-        Resume[] tempArray = new Resume[sizeArray];
+        Resume[] tempArray = new Resume[size];
         for (int i = 0; i < tempArray.length; i++) {
             tempArray[i] = storage[i];
         }
@@ -59,13 +58,7 @@ public class ArrayStorage {
     }
 
     int size() {
-        int count = 0;
-        for (Resume resume : storage) {
-            if (resume == null) {
-                break;
-            }
-            count++;
-        }
-        return count;
+        return this.size;
     }
 }
+
